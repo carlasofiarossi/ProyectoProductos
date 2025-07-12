@@ -222,6 +222,7 @@ async function updateUser(event) {
     }
 }
 
+
 async function destroyUser(id) {
     Swal.fire({
         title: "¿Estás seguro?",

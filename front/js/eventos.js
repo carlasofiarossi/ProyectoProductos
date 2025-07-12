@@ -45,7 +45,7 @@ toggleButton.addEventListener("click", function () {
           <div class="container">
               <ul class="menu-items" id="menu-items">
                   <div class="logo">
-                      <a href="index.html"><img src="imagenes/logo3.png" alt="MIGURI"></a>
+                      <a href="index.html"><img src="imagenes/logo3.png" alt="MEKUMI"></a>
                   </div>
                   <li><a href="index.html">Inicio</a></li>
                   <li class="dropdown" id="listasDropdown" style="display:none;">
@@ -85,9 +85,13 @@ toggleButton.addEventListener("click", function () {
                               <label for="email">Mail:</label>
                               <input type="email" id="email" name="email" required>
                               <br>
-                              <label for="password">Clave:</label>
-                              <input type="password" id="password" name="password" required><br>
-                              <button type="submit" class="form__button">Login</button><br>
+                             <label for="password">Clave:</label>
+<div class="password-container">
+  <input type="password" id="password" name="password" required>
+  <span class="toggle-password" onclick="toggleLoginPassword()">👁️</span>
+</div>
+                              <br>
+                              <button type="submit" class="form__button">Ingresar</button><br>
                               <p>¿No tienes cuenta? <a href="javascript:void(0);" onclick="toggleForms()">Regístrate</a></p>
                           </form>
                          <!-- Formulario de Registro -->
@@ -186,14 +190,14 @@ toggleButton.addEventListener("click", function () {
     const nombreUsuario = user.Nombre || "Usuario";
     const apellidoUsuario = user.Apellido || "";
     
-    loginButton.textContent = "Hola " + nombreUsuario + " " + apellidoUsuario;
+    loginButton.textContent = "Hola 👤 " + nombreUsuario + " " + apellidoUsuario;
     userName.textContent = nombreUsuario + " " + apellidoUsuario;
     loginButton.onclick = toggleDropdown;
 
     // Mostrar el menú "Listas" solo si el usuario está logeado
     listasDropdown.style.display = "block";  // Mostrar el menú "Listas"
   } else {
-    loginButton.textContent = "Login/Register";
+    loginButton.textContent = "Ingresar/Registrarse";
     loginButton.onclick = openModal;
     listasDropdown.style.display = "none";  // Ocultar el menú "Listas"
   }
@@ -207,7 +211,13 @@ toggleButton.addEventListener("click", function () {
   function togglePassword() {
     const passwordInput = document.getElementById("newPassword");
     passwordInput.type = (passwordInput.type === "password") ? "text" : "password";
+    
 }
+
+  function toggleLoginPassword() {
+    const passInput = document.getElementById("password");
+    passInput.type = passInput.type === "password" ? "text" : "password";
+  }
 
   // Función para abrir el modal
   function openModal() {
