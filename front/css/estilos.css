@@ -356,3 +356,24 @@ h6 {
     transform: translateY(-50%);
     cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .main__content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .section-form,
+  .right-column {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .input-busqueda,
+  .form__input,
+  .form__input2,
+  .form__input4 {
+    width: 100% !important;
+  }
+}

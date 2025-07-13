@@ -27,7 +27,7 @@ Trabajamos con marcas de prestigio como ${marcas.map(m => m.Nombre).join(", ")},
     modal.style.display = "flex";
   }
 
-  function closeModal() {
+  function closeModal2() {
     document.getElementById("modal").style.display = "none";
   }
 

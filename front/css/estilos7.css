@@ -1,3 +1,70 @@
+.small-text {
+  font-size: 14px; /* Cambia este valor según el tamaño que necesites */
+}
+
+/* Agrega una línea divisoria entre cada fila */
+.table-usuarios tbody tr {
+  border-bottom: 1px solid #ffffff; /* Color y grosor de la línea */
+}
+
+/* Opcional: Eliminar la línea del último elemento */
+.table-usuarios tbody tr:last-child {
+  border-bottom: none;
+}
+
+.form__input4 {
+    width: 100%;
+    margin-bottom: 1em; 
+    background-color: #555; 
+    color: #fff;
+    border-radius: 5px; 
+    border: 1px solid #ccc; /* Añade un borde */
+    height: 80px; /* Ajusta la altura según lo necesites */
+    padding: 10px; /* Espaciado interno para hacerlo más cómodo */
+  }
+  
+  /* Establecer anchos diferentes para cada columna */
+.task-header span:nth-child(1),
+.tasks__item p:nth-child(1) {
+  flex: 1; /* Ancho menor para ID */
+}
+
+.task-header span:nth-child(2),
+.tasks__item p:nth-child(2) {
+  flex: 2; /* Ancho mayor para Nombre */
+}
+
+.task-header span:nth-child(3),
+.tasks__item p:nth-child(3) {
+  flex: 3; /* Ancho mayor para Descripción */
+}
+
+.task-header span:nth-child(4),
+.tasks__item p:nth-child(4) {
+  flex: 4; /* Ancho intermedio para Marca */
+}
+
+.task-header span:nth-child(5),
+.tasks__item p:nth-child(5) {
+  flex: 0.1; /* Ancho menor para Acciones */
+}
+.task-header span:nth-child(6),
+.tasks__item p:nth-child(6) {
+  flex: 0.1; /* Ancho menor para Acciones */
+}
+.task-header span:nth-child(7),
+.tasks__item p:nth-child(7) {
+  flex: 0.1; /* Ancho menor para Acciones */
+}
+.task-header span:nth-child(8),
+.tasks__item p:nth-child(8) {
+  flex: 0.1; /* Ancho menor para Acciones */
+}
+.task-header span:nth-child(9),
+.tasks__item p:nth-child(9) {
+  flex: 0.1; /* Ancho menor para Acciones */
+}
+
 @import url("https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"); 
 
 * {
@@ -98,8 +165,8 @@ ol {
 
 
 
-.form__input{
-  width: 80%;
+.form__input3{
+  width: 86%;
   padding: 5px;
   margin-bottom: 1em; 
   background-color: #555; 
@@ -121,18 +188,6 @@ ol {
   border: 1px solid #ccc; /* Añade un borde */
 }
 
-.form__input4 {
-  
-  width: 300px;
-  padding: 5px;
-  margin-bottom: 1em; 
-  background-color: #555; 
-  color: #fff; 
- 
-  border-radius: 5px; 
-  flex: 1;
-  border: 1px solid #ccc; /* Añade un borde */
-}
 
 
 .form__button {
@@ -272,7 +327,7 @@ ol {
   color: #fff; 
   border-radius: 10px; 
   overflow-y: auto; 
-  max-height: 450px; /* Ajusta la altura según sea necesario */
+  max-height: 800px; /* Ajusta la altura según sea necesario */
   overflow-y: auto; /* Activa el scroll cuando el contenido sea mayor que la altura */
   border: 1px solid #ccc; /* Opcional: solo para visualizar mejor el área */
   padding: 10px;
@@ -490,18 +545,6 @@ h3 {
   border-radius: 0.3rem;
 }
 
-#table-usuarios th:nth-child(1) {
-  width: 20px; /* Ancho para la columna ID */
-}
-
-#table-usuarios th:nth-child(2) {
-  width: 200px; /* Ancho para la columna Nombre */
-}
-
-#table-usuarios th:nth-child(3) {
-  width: 20px; /* Ancho para la columna de botones */
-}
-
 /* Estilo del Modal */
 .modal {
   display: none; /* Por defecto el modal está oculto */
@@ -512,25 +555,20 @@ h3 {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Fondo translúcido */
-  top: 0; /* Lo sube un poco */
 }
 
 .modal-content {
   background-color: #fff;
-  margin: 10% auto;
+  margin: 15% auto;
   padding: 20px;
   border-radius: 5px;
   width: 80%;
   max-width: 500px;
 }
 
-.modal.register-mode .modal-content {
-  margin: 2.5% auto; /* Padding cuando está en el formulario de registro */
-}
-
 .close {
-  color: #ffffff;
-  font-size: 65px;
+  color: #aaa;
+  font-size: 28px;
   font-weight: bold;
   position: absolute;
   top: 10px;
@@ -540,39 +578,24 @@ h3 {
 
 .close:hover,
 .close:focus {
-  color: #b2297d;
+  color: black;
   text-decoration: none;
   cursor: pointer;
 }
 
 .modal input[type="text"],
-.modal input[type="password"],
-.modal input[type="email"],
-.modal input[type="number"],
-.modal select { /* 🔹 Agregado para estilizar los select */
+.modal input[type="password"] {
   width: 100%;
-  padding: 5px;
+  padding: 12px;
   margin: 8px 0;
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: white; /* Para que no herede colores del navegador */
-  appearance: none; /* Quita el estilo predeterminado en algunos navegadores */
-  cursor: pointer;
 }
-.hero-text a {
-  display: inline-block;
-  padding: 20px 25px;
-  background-color: #b2297d;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  margin-top: 10px;
-  transition: background 0.3s;
-}
+
 .modal button {
   width: 100%;
-  padding: 8px;
+  padding: 12px;
   background-color: #5e5858;
   color: #fff;
   border: none;
@@ -584,10 +607,43 @@ h3 {
   background-color: #b2297d;
 }
 
-.modal select {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='18' height='18' fill='gray'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 18px;
-  padding-right: 30px; /* Espacio para la flecha */
+@media (max-width: 768px) {
+ #table-usuarios thead th:nth-child(7),
+#table-usuarios tbody td:nth-child(7) {
+  display: none;
+}
+
+
+  #table-usuarios th,
+  #table-usuarios td {
+    text-align: center;
+    padding: 10px 5px;
+  }
+
+  #table-usuarios td img {
+    max-width: 60px;
+    height: auto;
+    border-radius: 5px;
+  }
+
+  #table-usuarios {
+    font-size: 14px;
+  }
+
+  .container-data-list h3 {
+    text-align: center;
+    font-size: 18px;
+  }
+}
+
+
+#table-usuarios img {
+  max-width: 100px;
+  height: auto;
+  border-radius: 5px;
+}
+
+
+body {
+  overflow-x: hidden;
 }

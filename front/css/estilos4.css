@@ -606,3 +606,44 @@ h3 {
 .modal button:hover {
   background-color: #b2297d;
 }
+
+@media (max-width: 768px) {
+  #table-usuarios thead th:nth-child(n+2):not(:last-child),
+  #table-usuarios tbody td:nth-child(n+2):not(:last-child) {
+    display: none;
+  }
+
+
+  #table-usuarios th,
+  #table-usuarios td {
+    text-align: center;
+    padding: 10px 5px;
+  }
+
+  #table-usuarios td img {
+    max-width: 60px;
+    height: auto;
+    border-radius: 5px;
+  }
+
+  #table-usuarios {
+    font-size: 14px;
+  }
+
+  .container-data-list h3 {
+    text-align: center;
+    font-size: 18px;
+  }
+}
+
+
+#table-usuarios img {
+  max-width: 100px;
+  height: auto;
+  border-radius: 5px;
+}
+
+
+body {
+  overflow-x: hidden;
+}
