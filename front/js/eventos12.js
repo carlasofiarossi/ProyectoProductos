@@ -20,6 +20,16 @@ Trabajamos con marcas de prestigio como ${marcas.map(m => m.Nombre).join(", ")},
         console.error("Error al cargar la descripción:", error);
     }
 }
+ function showModal(imgElement) {
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modal-img");
+    modalImg.src = imgElement.src;
+    modal.style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("modal").style.display = "none";
+  }
 
 // Llamar a la función cuando cargue la página
 document.addEventListener("DOMContentLoaded", cargarDescripcion);

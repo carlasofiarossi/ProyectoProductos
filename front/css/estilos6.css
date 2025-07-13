@@ -16,3 +16,41 @@
     background-color: #f3abd7;
   }
   
+.image-row {
+  display: center;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap; /* Para que se acomode en pantallas chicas */
+ 
+}
+
+.thumb {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.thumb:hover {
+  transform: scale(1.05);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0; top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal img {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 8px;
+}
