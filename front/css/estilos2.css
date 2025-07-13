@@ -139,7 +139,8 @@ ol {
   display: block;
   width: 100%;
   padding: 10px 15px;
-  background-color: #411168; 
+  font-family: 'Poppins', sans-serif;
+  background-color: #b2297d; 
   color: #ffffff;
   border: none;
   border-radius: 5px;
@@ -150,7 +151,7 @@ ol {
 }
 
 .form__button:hover {
-  background-color: #b2297d; 
+  background-color: #333; 
 }
 
 .error {

@@ -317,6 +317,14 @@ html, body {
     margin-bottom: 10px;
 }
 
+h1 {
+
+    text-align: center;
+    color: #ffffff;
+   
+    font-family: 'Sergio Trendy', sans-serif;
+}
+
 h6 {
     font-size: 25px;
     font-family: 'Sergio Trendy', sans-serif;
