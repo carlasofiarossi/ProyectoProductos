@@ -32,7 +32,11 @@ async function getNextCategoryID() {
 async function storeCategory() {
   const categoryName = inputCategory.value.trim();
   if (!categoryName) {
-    alert("El nombre de la categoria es obligatorio.");
+    Swal.fire({
+      icon: "warning",
+      title: "Campo obligatorio",
+      text: "El nombre de la categoria es obligatorio."
+    });
     return;
   }
 
@@ -49,13 +53,110 @@ async function storeCategory() {
 
     if (!response.ok) throw new Error(await response.text());
 
-    alert(selectedCategoryId ? "Categoria actualizada correctamente." : "Categoria guardada correctamente.");
+    Swal.fire({
+      icon: "success",
+      title: selectedCategoryId ? "Categoría actualizada" : "Categoría guardada",
+      text: selectedCategoryId ? "Categoría actualizada correctamente." : "Categoría guardada correctamente."
+    });
     cancelEdit();
     allCategories();
   } catch (error) {
     console.error("Error:", error);
-    alert("Error al guardar la categoria: " + error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Error al guardar",
+      text: error.message
+    });
   }
+}
+
+// Eliminar categoría con confirmación SweetAlert
+async function destroyCategory(id) {
+  const result = await Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Esta acción eliminará la categoría de forma permanente.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    if (!response.ok) throw new Error("No se pudo eliminar la categoría.");
+
+    Swal.fire({
+      icon: "success",
+      title: "Categoría eliminada",
+      text: "La categoría fue eliminada correctamente."
+    });
+    allCategories();
+  } catch (error) {
+    console.error("Error:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error al eliminar",
+      text: error.message
+    });
+  }
+}
+
+// Buscar categoría por ID con alertas SweetAlert
+async function showCategory() {
+  const categoryId = document.getElementById("input-busqueda").value.trim();
+  if (!categoryId) {
+    Swal.fire({
+      icon: "warning",
+      title: "ID requerido",
+      text: "Por favor, ingresa un ID."
+    });
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/${categoryId}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        Swal.fire({
+          icon: "error",
+          title: "No encontrada",
+          text: "La categoría buscada no existe."
+        });
+        return;
+      } else {
+        throw new Error(await response.text());
+      }
+    }
+
+    const category = await response.json();
+    const tableBody = document.querySelector("#table-usuarios tbody");
+    tableBody.innerHTML = "";
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${category.ID_Categoria}</td>
+      <td>${category.Nombre}</td>
+      <td>
+        <button class="btn-edit" onclick="editCategory(${category.ID_Categoria}, '${category.Nombre}')" title="Editar categoría">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button class="btn-delete" onclick="destroyCategory(${category.ID_Categoria})" title="Eliminar categoría">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  } catch (error) {
+    console.error("Error:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error al buscar",
+      text: error.message
+    });
+  }
+  document.getElementById("input-busqueda").value = "";
 }
 
 // 🌐 Obtener todas las categorias
@@ -112,64 +213,7 @@ function cancelEdit() {
   getNextCategoryID();
 }
 
-async function destroyCategory(id) {
-    if (!confirm("¿Estás seguro de que deseas eliminar esta categoria?")) return;
-  
-    try {
-      const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      if (!response.ok) throw new Error("No se pudo eliminar la categoria.");
-  
-      alert("Categoria eliminada correctamente.");
-      allCategories();
-    } catch (error) {
-      console.error("Error:", error);
-      alert(error.message);
-    }
-  }
 
-// 📊 Buscar categoria por ID
-async function showCategory() {
-  const categoryId = document.getElementById("input-busqueda").value.trim();
-  if (!categoryId) {
-    alert("Por favor, ingresa un ID.");
-    return;
-  }
-
-  try {
-    const response = await fetch(`${API_URL}/${categoryId}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        alert("ERROR: La categoria buscada no existe.");
-        return;
-      } else {
-        throw new Error(await response.text());
-      }
-    }
-
-    const category = await response.json();
-    const tableBody = document.querySelector("#table-usuarios tbody");
-    tableBody.innerHTML = "";
-
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${category.ID_Categoria}</td>
-      <td>${category.Nombre}</td>
-      <td>
-        <button class="btn-edit" onclick="editCategory(${category.ID_Categoria}, '${category.Nombre}')" title="Editar categoria">
-          <i class="fas fa-pencil-alt"></i>
-        </button>
-        <button class="btn-delete" onclick="destroyCategory(${category.ID_Categoria})" title="Eliminar categoria">
-          <i class="fas fa-trash"></i>
-        </button>
-      </td>
-    `;
-    tableBody.appendChild(row);
-  } catch (error) {
-    console.error("Error:", error);
-    alert("Error al buscar la categoria: " + error.message);
-  }
-  document.getElementById("input-busqueda").value = "";
-}
 
 // ==========================
 // 🔹 3. Eventos del DOM
@@ -183,3 +227,4 @@ document.addEventListener("DOMContentLoaded", () => {
   btnCancelar.style.display = "none";
   allCategories();
 });
+

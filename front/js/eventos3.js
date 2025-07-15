@@ -6,6 +6,7 @@ const btnGuardar = document.getElementById("btnGuardar");
 const btnCancelar = document.getElementById("btnCancelar");
 const inputID = document.getElementById("brandID"); // Input para ID
 const inputBrand = document.getElementById("brandName");
+const selectPais = document.getElementById("pais");
 let selectedBrandId = null; // Variable para almacenar el ID de la marca seleccionada
 
 // ==========================
@@ -25,14 +26,17 @@ async function getNextBrandID() {
     inputID.value = "Error";
   }
 }
-
 // 👉 Guardar o actualizar una marca
 async function storeBrand() {
   const brandName = inputBrand.value.trim();
-  const countryID = parseInt(document.getElementById("pais").value);
+  const countryID = parseInt(selectPais.value);
 
   if (!brandName || !countryID) {
-    alert("El nombre de la marca y el país son obligatorios.");
+    Swal.fire({
+      icon: "warning",
+      title: "Campos obligatorios",
+      text: "El nombre de la marca y el país son requeridos."
+    });
     return;
   }
 
@@ -49,12 +53,20 @@ async function storeBrand() {
 
     if (!response.ok) throw new Error(await response.text());
 
-    alert(selectedBrandId ? "Marca actualizada correctamente." : "Marca guardada correctamente.");
+    Swal.fire({
+      icon: "success",
+      title: selectedBrandId ? "Marca actualizada" : "Marca agregada",
+      text: selectedBrandId ? "La marca se actualizó correctamente." : "La marca fue guardada correctamente."
+    });
     cancelEdit();
     allBrands();
   } catch (error) {
     console.error("Error:", error);
-    alert("Error al guardar la marca: " + error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Error al guardar",
+      text: error.message
+    });
   }
 }
 
@@ -66,7 +78,7 @@ async function allBrands() {
 
     const brands = await response.json();
     const tableBody = document.querySelector("#table-usuarios tbody");
-    tableBody.innerHTML = ""; // Limpiar tabla
+    tableBody.innerHTML = "";
 
     brands.forEach(marca => {
       const row = document.createElement("tr");
@@ -87,8 +99,7 @@ async function allBrands() {
 
     getNextBrandID();
   } catch (error) {
-   // console.error("Error:", error);
-    //alert(error.message);
+    console.error("Error:", error);
   }
 }
 
@@ -106,6 +117,7 @@ function editBrand(id, nombre, pais) {
 function cancelEdit() {
   inputID.value = "";
   inputBrand.value = "";
+  selectPais.value = "";
   selectedBrandId = null;
 
   btnGuardar.textContent = "Guardar Marca";
@@ -115,17 +127,34 @@ function cancelEdit() {
 
 // 👉 Eliminar una marca
 async function destroyBrand(id) {
-  if (!confirm("¿Estás seguro de que deseas eliminar esta marca?")) return;
+  const result = await Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Esta acción eliminará la marca de forma permanente.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (!result.isConfirmed) return;
 
   try {
     const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
     if (!response.ok) throw new Error("No se pudo eliminar la marca.");
 
-    alert("Marca eliminada correctamente.");
+    Swal.fire({
+      icon: "success",
+      title: "Eliminada",
+      text: "Marca eliminada correctamente."
+    });
     allBrands();
   } catch (error) {
     console.error("Error:", error);
-    alert(error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message
+    });
   }
 }
 
@@ -134,7 +163,11 @@ async function showBrand() {
   const brandId = document.getElementById("input-busqueda").value.trim();
 
   if (!brandId) {
-    alert("Por favor, ingresa un ID.");
+    Swal.fire({
+      icon: "warning",
+      title: "Falta ID",
+      text: "Por favor, ingresa un ID."
+    });
     return;
   }
 
@@ -143,7 +176,11 @@ async function showBrand() {
 
     if (!response.ok) {
       if (response.status === 404) {
-        alert("ERROR: La marca buscada no existe.");
+        Swal.fire({
+          icon: "error",
+          title: "No encontrada",
+          text: "La marca buscada no existe."
+        });
         return;
       } else {
         throw new Error(await response.text());
@@ -152,7 +189,7 @@ async function showBrand() {
 
     const brand = await response.json();
     const tableBody = document.querySelector("#table-usuarios tbody");
-    tableBody.innerHTML = ""; // Limpiar tabla
+    tableBody.innerHTML = "";
 
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -172,7 +209,11 @@ async function showBrand() {
 
   } catch (error) {
     console.error("Error:", error);
-    alert("Error al buscar la marca: " + error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Error al buscar la marca: " + error.message
+    });
   }
   document.getElementById("input-busqueda").value = "";
 }

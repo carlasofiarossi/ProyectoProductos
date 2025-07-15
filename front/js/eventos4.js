@@ -32,7 +32,11 @@ async function getNextPronounID() {
 async function storePronoun() {
   const pronounName = inputPronoun.value.trim();
   if (!pronounName) {
-    alert("El nombre del pronombre es obligatorio.");
+    Swal.fire({
+      title: "Campo vacío",
+      text: "El nombre del pronombre es obligatorio.",
+      icon: "warning"
+    });
     return;
   }
 
@@ -49,14 +53,26 @@ async function storePronoun() {
 
     if (!response.ok) throw new Error(await response.text());
 
-    alert(selectedPronounId ? "Pronombre actualizado correctamente." : "Pronombre guardado correctamente.");
+    await Swal.fire({
+      title: selectedPronounId ? "Pronombre actualizado" : "Pronombre guardado",
+      text: "La operación fue realizada con éxito.",
+      icon: "success",
+      timer: 2000,
+      showConfirmButton: false
+    });
+
     cancelEdit();
     allPronouns();
   } catch (error) {
     console.error("Error:", error);
-    alert("Error al guardar el pronombre: " + error.message);
+    Swal.fire({
+      title: "Error",
+      text: "Error al guardar el pronombre: " + error.message,
+      icon: "error"
+    });
   }
 }
+
 
 // 🌐 Obtener todos los pronombres
 async function allPronouns() {
@@ -113,25 +129,52 @@ function cancelEdit() {
 }
 
 async function destroyPronoun(id) {
-    if (!confirm("¿Estás seguro de que deseas eliminar este pronombre?")) return;
-  
-    try {
-      const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      if (!response.ok) throw new Error("No se pudo eliminar el pronombre.");
-  
-      alert("Pronombre eliminado correctamente.");
-      allPronouns();
-    } catch (error) {
-      console.error("Error:", error);
-      alert(error.message);
-    }
-  }
+  const result = await Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Esta acción no se puede deshacer.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
 
+  if (!result.isConfirmed) return;
+
+  try {
+    const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    if (!response.ok) throw new Error("No se pudo eliminar el pronombre.");
+
+    await Swal.fire({
+      title: "Eliminado",
+      text: "Pronombre eliminado correctamente.",
+      icon: "success",
+      timer: 2000,
+      showConfirmButton: false
+    });
+
+    allPronouns();
+  } catch (error) {
+    console.error("Error:", error);
+    Swal.fire({
+      title: "Error",
+      text: error.message,
+      icon: "error"
+    });
+  }
+}
+
+// 📊 Buscar pronombre por ID
 // 📊 Buscar pronombre por ID
 async function showPronoun() {
   const pronounId = document.getElementById("input-busqueda").value.trim();
   if (!pronounId) {
-    alert("Por favor, ingresa un ID.");
+    Swal.fire({
+      title: "Campo vacío",
+      text: "Por favor, ingresa un ID.",
+      icon: "info"
+    });
     return;
   }
 
@@ -139,7 +182,11 @@ async function showPronoun() {
     const response = await fetch(`${API_URL}/${pronounId}`);
     if (!response.ok) {
       if (response.status === 404) {
-        alert("ERROR: El pronombre buscado no existe.");
+        Swal.fire({
+          title: "No encontrado",
+          text: "El pronombre buscado no existe.",
+          icon: "warning"
+        });
         return;
       } else {
         throw new Error(await response.text());
@@ -166,11 +213,15 @@ async function showPronoun() {
     tableBody.appendChild(row);
   } catch (error) {
     console.error("Error:", error);
-    alert("Error al buscar el pronombre: " + error.message);
+    Swal.fire({
+      title: "Error",
+      text: "Error al buscar el pronombre: " + error.message,
+      icon: "error"
+    });
   }
+
   document.getElementById("input-busqueda").value = "";
 }
-
 // ==========================
 // 🔹 3. Eventos del DOM
 // ==========================

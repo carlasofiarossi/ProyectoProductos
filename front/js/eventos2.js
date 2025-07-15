@@ -32,8 +32,7 @@ async function getNextCountryID() {
 async function storeCountry() {
   const countryName = inputCountry.value.trim();
   if (!countryName) {
-    alert("El nombre del país es obligatorio.");
-    return;
+   return Swal.fire("Campo requerido", "El nombre del país es obligatorio.", "warning");
   }
 
   try {
@@ -49,7 +48,7 @@ async function storeCountry() {
 
     if (!response.ok) throw new Error(await response.text());
 
-    alert(selectedCountryId ? "País actualizado correctamente." : "País guardado correctamente.");
+   Swal.fire("Éxito", selectedCountryId ? "País actualizado correctamente." : "País guardado correctamente.", "success");
     cancelEdit();
     allCountries();
   } catch (error) {
@@ -114,20 +113,30 @@ function cancelEdit() {
 
 // ⚠️ Eliminar país
 async function destroyCountry(id) {
-  if (!confirm("¿Estás seguro de que deseas eliminar este país?")) return;
+  const result = await Swal.fire({
+    title: "¿Estás segura?",
+    text: "Este país se eliminará permanentemente.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#999",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (!result.isConfirmed) return;
 
   try {
     const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
     if (!response.ok) throw new Error("No se pudo eliminar el país.");
 
-    alert("País eliminado correctamente.");
+    Swal.fire("Eliminado", "País eliminado correctamente.", "success");
     allCountries();
   } catch (error) {
     console.error("Error:", error);
-    alert(error.message);
+    Swal.fire("Error", error.message, "error");
   }
 }
-
 // 📊 Buscar país por ID
 async function showCountry() {
   const countryId = document.getElementById("input-busqueda").value.trim();

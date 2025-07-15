@@ -32,8 +32,7 @@ async function storeType() {
   const subcategoryID = parseInt(document.getElementById("subcategoria").value);
 
   if (!typeName || !subcategoryID) {
-    alert("El nombre del tipo y la subcategoría son obligatorios.");
-    return;
+   return Swal.fire("Campo requerido", "El nombre del tipo y subcategoria son obligatorio.", "warning");
   }
 
   try {
@@ -49,7 +48,7 @@ async function storeType() {
 
     if (!response.ok) throw new Error(await response.text());
 
-    alert(selectedTypeId ? "Tipo actualizado correctamente." : "Tipo guardado correctamente.");
+    Swal.fire("Éxito", selectedTypeId ? "Tipo de artículo actualizado correctamente." : "Tipo de artículo guardado correctamente.", "success");
     cancelEdit();
     allTypes();
   } catch (error) {
@@ -134,17 +133,28 @@ function cancelEdit() {
 
 // 👉 Eliminar un tipo
 async function destroyType(id) {
-  if (!confirm("¿Estás seguro de que deseas eliminar este tipo?")) return;
+  const result = await Swal.fire({
+    title: "¿Estás segura?",
+    text: "Este tipo de artículo se eliminará permanentemente.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#999",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (!result.isConfirmed) return;
 
   try {
     const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-    if (!response.ok) throw new Error("No se pudo eliminar el tipo.");
+    if (!response.ok) throw new Error("No se pudo eliminar el tipo de artículo.");
 
-    alert("Tipo eliminado correctamente.");
+    Swal.fire("Eliminado", "Tipo de artículo eliminado correctamente.", "success");
     allTypes();
   } catch (error) {
     console.error("Error:", error);
-    alert(error.message);
+    Swal.fire("Error", error.message, "error");
   }
 }
 
@@ -153,8 +163,8 @@ async function showType() {
   const typeId = document.getElementById("input-busqueda").value.trim();
 
   if (!typeId) {
-    alert("Por favor, ingresa un ID.");
-    return;
+   return Swal.fire("Campo vacío", "Por favor, ingresa un ID.", "warning");
+    
   }
 
   try {
@@ -162,8 +172,10 @@ async function showType() {
 
     if (!response.ok) {
       if (response.status === 404) {
-        alert("ERROR: El tipo buscado no existe.");
-        return;
+      
+       return Swal.fire("No encontrado", "El tipo de artículo buscado no existe.", "error");
+       
+        
       } else {
         throw new Error(await response.text());
       }

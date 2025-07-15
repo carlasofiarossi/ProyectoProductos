@@ -32,8 +32,8 @@ async function getNextProvinceID() {
 async function storeProvince() {
   const provinceName = inputProvince.value.trim();
   if (!provinceName) {
-    alert("El nombre de la provincia es obligatorio.");
-    return;
+    return Swal.fire("Campo requerido", "El nombre de la provincia es obligatorio.", "warning");
+    
   }
 
   try {
@@ -49,7 +49,7 @@ async function storeProvince() {
 
     if (!response.ok) throw new Error(await response.text());
 
-    alert(selectedProvinceId ? "Provincia actualizada correctamente." : "Provincia guardada correctamente.");
+    Swal.fire("Éxito", selectedProvinceId ? "Provincia actualizada correctamente." : "Provincia guardada correctamente.", "success");
     cancelEdit();
     allProvinces();
   } catch (error) {
@@ -113,34 +113,45 @@ function cancelEdit() {
 }
 
 async function destroyProvince(id) {
-    if (!confirm("¿Estás seguro de que deseas eliminar este province?")) return;
-  
-    try {
-      const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      if (!response.ok) throw new Error("No se pudo eliminar el province.");
-  
-      alert("Province eliminado correctamente.");
-      allProvinces();
-    } catch (error) {
-      console.error("Error:", error);
-      alert(error.message);
-    }
+  const result = await Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Esta provincia se eliminará permanentemente.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#999",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    if (!response.ok) throw new Error("No se pudo eliminar la provincia.");
+
+    Swal.fire("Eliminado", "Provincia eliminada correctamente.", "success");
+    allProvinces();
+  } catch (error) {
+    console.error("Error:", error);
+    Swal.fire("Error", error.message, "error");
   }
+}
 
 // 📊 Buscar provincia por ID
 async function showProvince() {
   const provinceId = document.getElementById("input-busqueda").value.trim();
   if (!provinceId) {
-    alert("Por favor, ingresa un ID.");
-    return;
+    return Swal.fire("Campo vacío", "Por favor, ingresa un ID.", "warning");
+   
   }
 
   try {
     const response = await fetch(`${API_URL}/${provinceId}`);
     if (!response.ok) {
       if (response.status === 404) {
-        alert("ERROR: La provincia buscado no existe.");
-        return;
+         return Swal.fire("No encontrado", "La provincia buscado no existe.", "error");
+        
       } else {
         throw new Error(await response.text());
       }

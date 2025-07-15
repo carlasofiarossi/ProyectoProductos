@@ -21,7 +21,11 @@ async function allArticles() {
                 <td>${article.Subcategoria}</td>
                 <td>${article.Tipo}</td>
                 <td>${article.Marca}</td>
-                <td class="small-text">${article.Descripcion}</td>
+              <td class="small-text">
+  ${article.Descripcion.slice(0, 30)}...
+  <a href="#" onclick="verDescripcion('${encodeURIComponent(article.Descripcion)}')">ver más</a>
+</td>
+
                 <td>$${article.Precio}</td>
                 <td>
                     <img src="${article.Imagen ? '/uploads/' + article.Imagen : 'default-image.jpg'}" style="width: 100px; height: auto;">
@@ -35,6 +39,21 @@ async function allArticles() {
         alert("Error al cargar los artículos: " + error.message);
     }
 }
+
+function verDescripcion(descEncoded) {
+  const descripcion = decodeURIComponent(descEncoded);
+
+  Swal.fire({
+    title: 'Descripción completa',
+    html: `<div style="text-align: left;">${descripcion}</div>`,
+    icon: 'info',
+    confirmButtonText: 'Cerrar',
+    customClass: {
+      popup: 'swal-wide'
+    }
+  });
+}
+
 
 // Llamar a la función cuando la página cargue
 document.addEventListener("DOMContentLoaded", allArticles);

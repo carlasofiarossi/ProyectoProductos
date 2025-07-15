@@ -197,7 +197,8 @@ toggleButton.addEventListener("click", function () {
     // Mostrar el menú "Listas" solo si el usuario está logeado
     listasDropdown.style.display = "block";  // Mostrar el menú "Listas"
   } else {
-    loginButton.textContent = "Ingresar/Registrarse";
+   loginButton.innerHTML = 'Ingresar/Registrarse <img src="/front/imagenes/destello-mini.png" style="height: 1em; vertical-align: middle;">';
+
     loginButton.onclick = openModal;
     listasDropdown.style.display = "none";  // Ocultar el menú "Listas"
   }

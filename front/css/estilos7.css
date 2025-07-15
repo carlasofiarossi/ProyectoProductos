@@ -607,6 +607,7 @@ h3 {
   background-color: #b2297d;
 }
 
+
 @media (max-width: 768px) {
  #table-usuarios thead th:nth-child(7),
 #table-usuarios tbody td:nth-child(7) {

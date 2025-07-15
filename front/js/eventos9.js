@@ -47,7 +47,11 @@ async function allArticles() {
                 <td>${article.Subcategoria}</td>
                 <td>${article.Tipo}</td>
                 <td>${article.Marca}</td>
-                <td class="small-text">${article.Descripcion}</td>
+                <td class="small-text">
+  ${article.Descripcion.slice(0, 30)}...
+  <a href="#" onclick="verDescripcion('${encodeURIComponent(article.Descripcion)}')">ver más</a>
+</td>
+
                 <td>$${article.Precio}</td>
                 <td>
                     <img src="${article.Imagen ? '/uploads/' + article.Imagen : 'default-image.jpg'}" style="width: 100px; height: auto;">
@@ -209,20 +213,19 @@ document.querySelector("#subcategoria").addEventListener("change", async functio
 async function showArticle() {
   const articleId = document.getElementById("input-busqueda").value.trim(); // Obtener el ID del artículo
 
-  if (!articleId) {
-    alert("Por favor, ingresa un ID.");
-    return;
-  }
+ if (!articleId) {
+  return Swal.fire("Campo vacío", "Por favor, ingresa un ID.", "warning");
+}
 
   try {
     const response = await fetch(`${API_URL}/articulos/${articleId}`); // Hacer la solicitud a la API del servidor
 
     if (!response.ok) {
-      if (response.status === 404) {
-        alert("ERROR: El artículo buscado no existe.");
+     if (response.status === 404) {
+  return Swal.fire("No encontrado", "El artículo buscado no existe.", "error");
         return;
       } else {
-        throw new Error(await response.text());
+        Swal.fire("Error", "Error al buscar el artículo: " + error.message, "error");
       }
     }
 
@@ -240,7 +243,10 @@ async function showArticle() {
                 <td>${article.Subcategoria}</td>
                 <td>${article.Tipo}</td>
                 <td>${article.Marca}</td>
-                <td class="small-text">${article.Descripcion}</td>
+                <td class="small-text">
+  ${article.Descripcion.slice(0, 30)}...
+  <a href="#" onclick="verDescripcion('${encodeURIComponent(article.Descripcion)}')">ver más</a>
+</td>
               <td>$${article.Precio}</td>
                 <td>
                     <img src="${article.Imagen ? '/uploads/' + article.Imagen : 'default-image.jpg'}" style="width: 100px; height: auto;">
@@ -287,17 +293,42 @@ function cancelEdit() {
 
 // 👉 Eliminar artículo
 async function destroyArticle(id) {
-    if (confirm("¿Estás seguro de que quieres eliminar este artículo?")) {
-        try {
-            const response = await fetch(`${API_URL}/articulos/${id}`, { method: "DELETE" });
-            if (!response.ok) throw new Error("No se pudo eliminar el artículo.");
-            alert("Artículo eliminado correctamente.");
-            allArticles();
-        } catch (error) {
-            console.error("Error al eliminar el artículo:", error);
-            alert(error.message);
-        }
+  const result = await Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Esta acción eliminará el artículo permanentemente.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#999",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const response = await fetch(`${API_URL}/articulos/${id}`, { method: "DELETE" });
+      if (!response.ok) throw new Error("No se pudo eliminar el artículo.");
+
+      Swal.fire("Eliminado", "Artículo eliminado correctamente.", "success");
+      allArticles();
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
     }
+  }
+}
+
+function verDescripcion(descEncoded) {
+  const descripcion = decodeURIComponent(descEncoded);
+
+  Swal.fire({
+    title: 'Descripción completa',
+    html: `<div style="text-align: left;">${descripcion}</div>`,
+    icon: 'info',
+    confirmButtonText: 'Cerrar',
+    customClass: {
+      popup: 'swal-wide'
+    }
+  });
 }
 
 // 👉 Cargar datos en los selects
@@ -408,8 +439,9 @@ async function storeArticle() {
     const imageFile = document.getElementById("image").files[0];  // Obtener el archivo de imagen
 
     if (!articleName || !articleDescription || isNaN(articlePrice) || articlePrice <= 0 || !categoryID || !subcategoryID || !typeID || !brandID) {
-        alert("Todos los campos son obligatorios.");
+        swal.fire("Todos los campos son obligatorios.");
         return;
+        
     }
 
     const formData = new FormData();

@@ -32,8 +32,9 @@ async function storeSubcategory() {
   const categoryID = parseInt(document.getElementById("categoria").value);
 
   if (!subcategoryName || !categoryID) {
-    alert("El nombre de la subcategoría y la categoría son obligatorios.");
-    return;
+     return Swal.fire("Campo requerido", "El nombre de la subcategoría y la categoría son obligatorios.", "warning");
+    
+  
   }
 
   try {
@@ -49,7 +50,7 @@ async function storeSubcategory() {
 
     if (!response.ok) throw new Error(await response.text());
 
-    alert(selectedSubcategoryId ? "Subcategoría actualizada correctamente." : "Subcategoría guardada correctamente.");
+   Swal.fire("Éxito", selectedSubcategoryId ? "Subcategoría actualizada correctamente." : "Subcategoría guardada correctamente.", "success");
     cancelEdit();
     allSubcategories();
   } catch (error) {
@@ -115,27 +116,37 @@ function cancelEdit() {
 
 // 👉 Eliminar una subcategoría
 async function destroySubcategory(id) {
-  if (!confirm("¿Estás seguro de que deseas eliminar esta subcategoría?")) return;
+  const result = await Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Esta subcategporía se eliminará permanentemente.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#999",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (!result.isConfirmed) return;
 
   try {
     const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
     if (!response.ok) throw new Error("No se pudo eliminar la subcategoría.");
 
-    alert("Subcategoría eliminada correctamente.");
+    Swal.fire("Eliminado", "Subcategoría eliminada correctamente.", "success");
     allSubcategories();
   } catch (error) {
     console.error("Error:", error);
-    alert(error.message);
+    Swal.fire("Error", error.message, "error");
   }
 }
-
 // 👉 Buscar una subcategoría específica
 async function showSubcategory() {
   const subcategoryId = document.getElementById("input-busqueda").value.trim();
 
   if (!subcategoryId) {
-    alert("Por favor, ingresa un ID.");
-    return;
+     return Swal.fire("Campo vacío", "Por favor, ingresa un ID.", "warning");
+  
   }
 
   try {
@@ -143,7 +154,7 @@ async function showSubcategory() {
 
     if (!response.ok) {
       if (response.status === 404) {
-        alert("ERROR: La subcategoría buscada no existe.");
+        return Swal.fire("No encontrado", "La subcategoría buscada no existe.", "error");
         return;
       } else {
         throw new Error(await response.text());
