@@ -52,12 +52,12 @@ toggleButton.addEventListener("click", function () {
                       <a href="#">Gestión</a>
                       <ul class="dropdown-content">
                           <li><a href="lista_articulos.html">Artículos</a></li>
-                          <li><a href="lista_categorias.html">Categorias</a></li>
+                          <li><a href="lista_categorias.html">Categorías</a></li>
                           <li><a href="lista_marcas.html">Marcas</a></li>
-                          <li><a href="lista_paises.html">Paises</a></li>
+                          <li><a href="lista_paises.html">Países</a></li>
                           <li><a href="lista_pronombres.html">Pronombres</a></li>
                           <li><a href="lista_provincias.html">Provincias</a></li>
-                          <li><a href="lista_subcategorias.html">Subcategorias</a></li>
+                          <li><a href="lista_subcategorias.html">Subcategorías</a></li>
                           <li><a href="lista_tipos.html">Tipos</a></li>
                           <li><a href="lista_usuarios.html">Usuarios</a></li>
                       </ul>
